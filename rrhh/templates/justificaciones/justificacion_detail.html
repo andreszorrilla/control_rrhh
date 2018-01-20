@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load sortable %}
+{% load static %}
+{% load staticfiles %}
+{% block menu %}
+    {% include 'menu/menu_justificaciones.html' with justificacion='active' %}
+{% endblock %}
+
+
+{% block content %}
+
+	<link rel="stylesheet" href="{% static 'css/print.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/biometrico/marcaciones.css' %}"/>
+
+    
+
+    {% include 'pdf/pdf_header.html' %}
+
+
+   <h3 class="page-header">
+        <span class="web-title">Constancia de Justificacion de Marcación</span>
+        <span class="report-title"></span>
+        <hr/>
+    </h3>
+    <div id="div-tabla">
+        <table class="table">
+            <tr>
+                <th>Número:</th>
+                <td> {{ justificacion.id }}</td></td>
+            </tr>
+            <tr>
+                <th>Fecha de emisión:</th>
+                <td> {{ justificacion.created_at }}</td>
+            </tr>
+
+            <tr>
+                <th>Funcionario:</th>
+                <td> {{ justificacion.funcionario }}</td>
+            </tr>
+            <tr>
+                <th>Número de Documento:</th>
+                <td> {{ justificacion.funcionario.documento }}</td>
+            </tr>
+
+            <tr>
+                <th>Cargo:</th>
+                <td> {{ justificacion.funcionario.cargo }} </td>
+            </tr>
+            <tr>
+                <th>Sección:</th>
+                <td> {{ justificacion.funcionario.seccion }}</td>
+            </tr>
+            <tr>
+                <th>Tipo de Justificación:</th>
+                <td> {{ justificacion.get_tipo_justificacion_display }}</td>
+            </tr>
+            <tr>
+                <th>Fecha y Hora de Justificación:</th>
+                <td> {{ justificacion.fecha_hora }} </td>
+            </tr>
+            {% if justificacion.motivo_justificacion %}
+            <tr>
+                <th>Motivo:</th>
+                <td> {{ justificacion.motivo_justificacion }} </td>
+            </tr>
+            {% endif %}
+            {% if justificacion.observaciones %}
+            <tr>
+                <th>Observaciones:</th>
+                <td> {{ justificacion.observaciones }} </td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <div id="div-texto" class="hide">
+        Certifico la <i>{{ justificacion.get_tipo_marcacion_display }}</i> el funcionario/a <i>{{ justificacion.funcionario }}</i> del departamento de <i>{{ justificacion.funcionario.seccion }}</i>, en la fecha de <i>{{ justificacion.fecha_hora }}</i> por motivo de <i>{{ justificacion.motivo_justificacion }}</i>
+        {% if justificacion.observaciones %}
+            <p><b>Observaciones:</b> {{ justificacion.observaciones }}</p>
+        </tr>
+        {% endif %}
+
+    </div>
+
+
+    <div id="div-footer-normal">
+        {% include 'pdf/pdf_footer_biometrico.html' %}
+    </div>
+    <div class="panel-footer noprint " id="div-footer">
+        <button class="btn  btn-default btn-back">Volver</button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-info btn-print">Imprimir <i class="glyphicon glyphicon-print"></i></button>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $('.btn-print').click(function(){
+        var text = "Constancia de Justificacion de Marcacion";
+        $(".report-title").html( text.toUpperCase() );
+        $("#div-texto").hide();
+        $("#div-tabla").show();
+        window.print();        
+    });
+
+    $('.btn-print-texto').click(function(){
+        var text = "Constancia de Justificacion de Marcacion";
+        $(".report-title").html( text.toUpperCase() );
+
+        $("#div-tabla").hide();
+        $("#div-texto").show();
+        window.print();
+    });
+</script>
+
+
+<style type="text/css">
+    @media screen{
+        #div-texto{
+            display: none;
+        }
+
+        #div-texto{
+        }
+    }
+</style>
+
+
+
+{% endblock %}
+

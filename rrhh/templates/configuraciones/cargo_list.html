@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load sortable %}
+{% block menu %}
+    {% include 'menu/menu_parametros.html' with cargo='active' %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-4">
+            <h1 class="page-header">
+                Cargos
+                <a href="{% url "cargo_form" %}" class="btn btn-primary" style="float: right">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Nuevo
+                </a>
+            </h1>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">                
+                <div class="col-lg-offset-8 col-lg-4">
+                    <div class="input-group">
+                        <input type="text" id="input-filtro" class="form-control" value="">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    {% sortable_header id "Numero" %}
+                    {% sortable_header nombre  %}
+                    {% sortable_header seccion "Departamento" %}
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for cargo in cargos %}
+                    <tr>
+                        <td>{{ cargo.id }}</td>
+                        <td>{{ cargo.nombre }}</td>
+                        <td>{{ cargo.seccion.nombre }}</td>
+                        <td>
+                            <form action="{% url "cargo_delete" cargo.id %}" method="delete" onsubmit="return confirm('¿Esta seguro de eliminar?');">
+                                <a href="{% url "cargo_detail" cargo.id %}" class="btn btn-primary btn-xs"
+                                   data-toggle="tooltip" title="Ver Detalles"><span
+                                        class="glyphicon glyphicon-eye-open"></span></a>
+
+
+                                <a href="{% url "cargo_update" cargo.id %}" class="btn btn-info btn-xs"
+                                   data-toggle="tooltip" title="Editar"><span
+                                        class="glyphicon glyphicon-edit"></span></a>
+                            
+                                
+                               <button type="submit" value="Submit" class="btn btn-danger btn-xs" data-toggle="tooltip" title="Eliminar">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                               </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            {% include "paginador.html" with page_range=page_range pagination_list=cargos %}
+
+        </div>
+    </div>
+    <script src="{{ STATIC_URL }}js/configuraciones/cargos_list.js"></script>
+{% endblock %}

@@ -1,0 +1,192 @@
+@media print{
+    .noprint{
+        display: none;
+    }
+
+    .table-marcacion{
+        font-size: 12px;
+        width: 100%;
+        page-break-inside: avoid;
+    }
+    
+    .table-marcacion > thead > tr > th,
+    .table-marcacion > tbody > tr > th,
+    .table-marcacion > tfoot > tr > th,
+    .table-marcacion > thead > tr > td,
+    .table-marcacion > tbody > tr > td,
+    .table-marcacion > tfoot > tr > td{
+        padding-bottom: 3px;
+        padding-top: 3px;
+    }
+
+
+
+    .table-datos-marcacion > thead > tr > th,
+    .table-datos-marcacion > tbody > tr > th,
+    .table-datos-marcacion > tfoot > tr > th,
+    .table-datos-marcacion > thead > tr > td,
+    .table-datos-marcacion > tbody > tr > td,
+    .table-datos-marcacion > tfoot > tr > td{
+        padding-bottom: 1px;
+        padding-top: 1px;
+    }
+
+    .table-datos-marcacion{
+        font-size: 14px;
+        margin-bottom: 1px;
+        padding-bottom: 1px;
+    }
+
+    .marcaciones-list{
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+
+    .marcaciones-list > hr{
+        margin-bottom: 3px;
+        padding-bottom: 3px;
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+    }
+
+    #panel-marcaciones{
+    }
+
+    #panel-marcaciones .marcaciones-list:not(:first-child) img{
+        margin-top: 1%;
+    }
+    #panel-marcaciones tr{
+        -webkit-print-color-adjust:exact;
+        background-color: blue;
+    }
+    .firma_depto{
+        margin-top: 5px;
+    }
+    body {
+        -webkit-print-color-adjust: exact !important; 
+    }
+    .title-reporte{
+        font-weight: bold;
+        margin-top: 0px;
+        padding-top: 0px;
+    }
+
+
+
+    // Estilos para seccion de datos de cada marcacion.
+
+    .table-datos-marcacion{
+        width: 90% !important;
+        max-width: 90% !important;
+    }
+
+
+    .table-datos-marcacion > thead > tr > th,
+    .table-datos-marcacion > tbody > tr > th,
+    .table-datos-marcacion > tfoot > tr > th,
+    .table-datos-marcacion > thead > tr > td,
+    .table-datos-marcacion > tbody > tr > td,
+    .table-datos-marcacion > tfoot > tr > td{
+        padding-bottom: 1px;
+        padding-top: 1px;
+    }
+
+
+
+    html, body, .page-header{
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .noprint{
+            display: none !important;
+        }
+        .panel-default{
+            border-color: #FFFFFF;
+        }
+
+        .logo{
+            width: 15%;
+            margin-top: -10%;
+        }
+
+        .header h4{
+            margin-top: -10%;
+            margin-bottom: 0;
+            font-weight:  bold;
+        }
+        
+        .firma{
+            font-size:1em;
+            background-color:#CC0000;
+            color:#FFFFFF;
+            text-align: center;
+            overflow: hidden;
+            position: fixed;
+            bottom: 0;
+            width: 95%;
+        }
+
+        .firma table tr th, 
+        .firma table tr td {
+            text-align: center;
+        }
+
+        .firma table tr:nth-child(odd) th, .firma table tr:nth-child(odd) td{
+            padding-bottom: 0px;
+        }
+
+        .firma tr:nth-child(2){
+            line-height: 14px; 
+        }
+
+
+        .firma hr{
+            margin-top: 0;
+            margin-bottom: 0;
+            margin-bottom: 0;
+        }
+        
+
+        .page-header{
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .page-header hr{
+            margin-bottom: 0px;
+        }
+
+        .web-title{
+            display: none;
+        }
+
+
+        .firma p{
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size:0.7em;
+        }
+
+        .firma-depto{
+            float: left;
+        }
+
+        .autor{
+            float: right;
+        }
+
+
+}
+
+
+@media screen{
+    #panel-marcaciones{
+        display: none;
+    }
+    .btn-edit-funcionario{
+        text-decoration: none !important;
+    }
+    .title-reporte{
+        display: none;
+    }
+
+}

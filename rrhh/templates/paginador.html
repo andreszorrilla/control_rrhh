@@ -1,0 +1,47 @@
+{%  if pagination_list.num != 1 and pagination_list.has_next %}
+    <ul class="pagination">
+        {% if pagination_list.has_previous %}
+            <li>
+                {% if request.GET.dir%}
+                <a href="?estado={{ request.GET.estado }}&filtro={{ request.GET.filtro }}&sort={{ request.GET.sort }}&page={{ pagination_list.previous_page_number }}&dir={{ request.GET.dir }}">&laquo;</a>
+                {% else %}
+                <a href="?estado={{ request.GET.estado }}&filtro={{ request.GET.filtro }}&page={{ pagination_list.previous_page_number }}">&laquo;</a>
+                {% endif %}
+            </li>
+        {% else %}
+            <li class="disabled"><a href="#">&laquo;</a></li>
+        {% endif %}
+        {% if pagination_list.number > 5 %}
+            <li><a href="#">...</a></li>
+        {% endif %}
+        {% for num in page_range %}
+            {% if pagination_list.number == num %}
+                <li class="active">
+                    <span>{{ num }}<span class="sr-only">(current)</span></span>
+                </li>
+            {% else %}
+                <li>
+                {% if request.GET.dir %}
+                    <a href="?estado={{ request.GET.estado }}&filtro={{ request.GET.filtro }}&sort={{ request.GET.sort }}&page={{ num }}&dir={{ request.GET.dir }}">{{ num }}</a>
+                {% else %}
+                    <a href="?estado={{ request.GET.estado }}&filtro={{ request.GET.filtro }}&page={{ num }}">{{ num }}</a>
+                {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+        {% if pagination_list.number < 5 %}
+            <li><a href="#">...</a></li>
+        {% endif %}
+        {% if pagination_list.has_next %}
+            <li>
+                {% if request.GET.dir%}
+                <a href="?estado={{ request.GET.estado }}&filtro={{ request.GET.filtro }}&sort={{ request.GET.sort }}&page={{ pagination_list.next_page_number }}&dir={{ request.GET.dir }}">&raquo;</a>
+                {% else %}
+                <a href="?estado={{ request.GET.estado }}&filtro={{ request.GET.filtro }}&page={{ pagination_list.next_page_number }}">&raquo;</a>
+                {% endif %}
+            </li>
+        {% else %}
+            <li class="disabled"><a href="#">&raquo;</a></li>
+        {% endif %}
+    </ul>
+{% endif %}

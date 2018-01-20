@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block menu %}
+    {% include 'menu/menu_configuraciones.html' with funcionario='active'%}
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        Parametros
+        <hr/>
+    </h1>
+    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {% csrf_token %}
+                {% crispy form %}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="{% url "parametro_detail" 1 %}" class="btn btn-default">Volver</a>
+            </div>
+        </div>
+    </form>
+    <script>
+
+    </script>
+
+    <script src="{{ STATIC_URL }}js/configuraciones/parametro_form.js"></script>
+
+{% endblock %}
+

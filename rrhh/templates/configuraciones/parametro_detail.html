@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block menu %}
+    {% include 'menu/menu_configuraciones.html' with parametro='active' %}
+{% endblock %}
+{% block content %}
+{% load static %}
+    <h1 class="page-header">
+        Parametros
+        <hr/>
+    </h1>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><b>Institución: </b>{{ parametro.institucion}}</p>
+
+            <p><b>Años de Acumulables de Vacaciones: </b>{{ parametro.anhos_acumulables_vacaciones }}</p>
+
+            <p><b>Logo: </b>{{ parametro.logo }}</p>
+            <img src="{% static "archivos/logo_uni_2_8lSe3r0.png" %}" alt="My image" class="logo" />
+
+
+        </div>
+        <div class="panel-footer">
+            <a href="{% url "parametro_update" parametro.id %}" class="btn btn-primary">Editar</a>
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% load sortable %}
+{% block menu %}
+    {% include 'menu/menu_biometrico.html' with marcaciones='active' %}
+{% endblock %}
+{% block content %}
+
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/biometrico/marcaciones.css' %}"/>
+
+    <h1 class="page-header noprint">
+        Marcaciones
+    </h1>
+
+<form id="form-marcacion-filter" action="{% url "marcaciones_list" %}" method="get" class="form-horizontal" >
+    <div class="panel panel-default noprint" id="filter">
+        <div class="panel-heading">
+            <h4>Reporte de Marcaciones</h4>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label for="desde" class="col-sm-2 control-label">Fechas</label>
+                <div class="col-sm-9">
+                    <div class="input-group input-daterange">
+                        <input type="text" class="form-control" autocomplete="off" placeholder="Desde" name="desde" value="{{ request.GET.desde }}">
+                        <div class="input-group-addon">a</div>
+                        <input type="text" class="form-control" autocomplete="off" placeholder="Hasta" name="hasta" value="{{ request.GET.hasta }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="documento" class="col-sm-2 control-label">Búsqueda avanzada **</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" placeholder="Número de documento" name="documento" value="{{ request.GET.documento }}">
+                </div>
+                <div class="col-sm-4">
+                    <select class="form-control" name="id_seccion">
+                        <option value="">-- Elija un departamento --</option>
+                        {% for seccion in secciones %}
+                            <option value="{{ seccion.id }}"{% if seccion.id_str == request.GET.id_seccion %} selected{% endif %}>{{ seccion.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <span class="help-block">**Si no se completan los campos, se considerarán todos los funcionarios.</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer" style="">
+            <button type="submit" class="btn-primary btn" id="btn-submit">Enviar</button>
+            <a class="btn-default btn" href="{% url "marcaciones_list" %}">Limpiar</a>
+        </div>
+    </div>
+</form>
+    {% if hay_pendientes %}
+        <div class="row noprint" id="panel-notificaciones">
+            <div class="col-sm-offset-2 col-sm-8">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <h4>
+                            Advertencia <i class="glyphicon glyphicon-info-sign"></i>
+                        </h4>            
+                    </div>
+                    <div class="panel-body">
+                        <p>Los siguientes funcionarios deben ser registrados en el sistema para que se pueda generar el reporte:</p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Cedula</th>
+                                    <th>Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for funcionario in funcionarios_pendientes %}
+                                <tr>
+                                    <td>{{ funcionario.documento }}</td>
+                                    <td>
+                                        <a href="{% url "funcionario_update" funcionario.id %}" class="btn btn-warning btn-xs btn-edit-funcionario"  data-toggle="tooltip" title="Editar" target="_blank" style="text-decoration: none !important;">
+                                            Editar <span class="glyphicon glyphicon-share-alt"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>               
+                        </table>
+                    </div>
+                 </div>                
+            </div>
+        </div>
+    {% else %}
+    {% if request.GET.hasta and request.GET.desde %}
+        <div class="row noprint" id="panel-notificaciones">
+            <div class="col-sm-offset-2 col-sm-8">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4>
+                            Resultados <i class="glyphicon glyphicon-ok-circle"></i>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th width="20%">Funcionarios Procesados:</th>
+                                <td width="40%"> {{ cantidad_funcionarios }}</td>
+                            </tr>
+                            <tr>
+                                <th>Hora de emision:</th>
+                                <td> {{ hora_emision }}</td>
+                            </tr>
+                        </table>
+                        <button type="button" class="btn btn-info btn-print">
+                            Imprimir <i class="glyphicon glyphicon-print"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="panel-marcaciones">
+            {% include "biometrico/_marcacion_reporte.html" with marcaciones_funcionarios_list=marcaciones_funcionarios_list %}
+            
+        {% include 'pdf/pdf_footer_biometrico.html' %}
+        </div>
+        {% endif %}
+    {% endif %}
+    <script src="{{ STATIC_URL }}js/biometrico/marcaciones_list.js"></script>
+{% endblock %}

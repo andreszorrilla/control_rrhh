@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block menu %}
+    {% include 'menu/menu_parametros.html' with funcionario='active' %}
+{% endblock %}
+
+{% block content %}
+    <h1 class="page-header">
+        Detalle Funcionario
+        <hr/>
+    </h1>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><b>Nombre: </b>{{ funcionario.nombre }}</p>
+            <p><b>Apellido: </b>{{ funcionario.apellido }}</p>
+            <p><b>Documento: </b>{{ funcionario.documento }}</p>
+            <p><b>Fecha Ingreso.: </b>{{ funcionario.fecha_ingreso }}</p>
+            <p><b>Estado: </b>{{ funcionario.get_estado_display}}</p>
+        </div>
+        <div class="panel-footer">
+            <a href="{% url "funcionario_update" funcionario.id %}" class="btn btn-primary">Editar</a>
+{#            <a href="{% url "funcionario_list"%}?estado=activos" class="btn btn-default">Volver</a>#}
+            <span class="btn btn-default btn-back">Volver</span>
+        </div>
+    </div>
+{% endblock %}
+
+

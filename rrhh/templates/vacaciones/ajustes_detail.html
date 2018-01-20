@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block menu %}
+    {% include 'menu/menu_vacaciones.html' with ajustes='active' %}
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        Detalle de Vacaciones
+        <hr/>
+    </h1>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><b>Nombres: </b>{{ funcionario.nombre }}</p>
+            <p><b>Apellidos: </b>{{ funcionario.apellido }}</p>
+            <p><b>Documentos: </b>{{ funcionario.documento }}</p>
+            <p><b>Fecha de Ingreso: </b>{{ funcionario.fecha_ingreso }}</p>
+
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th width="">Año</th>
+                    <th width="">Total</th>
+                    <th width="">Usados</th>
+                    <th width="">Libres</th>
+                    <th width=""></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for periodo in periodos %}
+
+                    <tr {% if periodo.estado == 'vencido' %} class="active" style="color:#808080" {% endif %}>
+                        <td>{{ periodo.get_anhos_periodos }}</td>
+                        <td>{{ periodo.total }}</td>
+                        <td>{{ periodo.usados }}</td>
+                        <td>{{ periodo.libres }}</td>
+                        <td>
+                            {% if periodo.estado == 'vencido' %}
+                                <span class="label label-danger btn-xs" data-toggle="tooltip" data-placement="right"
+                                      title=""><span
+                                        class="glyphicon glyphicon-ban-circle"></span> Vencido</span>
+                            {% endif %}
+                                <!--<a href="{% url "ajustes_vacaciones_detail_update" periodo.id %}"
+                                   class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="right"
+                                   title="Editar"><span
+                                        class="glyphicon glyphicon-edit"></span></a>
+                            -->
+
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+            {% if perms.vacaciones.add_periodo %}
+            <a href="/vacaciones/ajustes/detail/create/?id_funcionario={{ funcionario.id }}" class="btn btn-primary">Agregar
+            </a>
+            {% endif %}
+{#            <a href="{% url "ajustes_vacaciones_list" %}" class="btn btn-default">Volver</a>#}
+            <button class="btn btn-default btn-back">Volver</button>
+
+        </div>
+    </div>
+
+    <div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

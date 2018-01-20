@@ -1,0 +1,47 @@
+
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load sortable %}
+{% load static %}
+{% block menu %}
+    {% include 'menu/menu_justificaciones.html' with justificacion='active' %}
+{% endblock %}
+
+{% block content %}
+    <h1 class="page-header">
+        Formulario de Justificaciones
+        <hr/>
+    </h1>
+    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {% crispy form %}
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="{% url "justificaciones_list"%}?estado=activo" class="btn btn-default">Volver</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+    <div class="modal fade modal-funcionario-notfound" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>No se pudo localizar al funcionario.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="btn-modal-aceptar" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ STATIC_URL }}js/justificaciones/justificacion_form.js"></script>
+    <link rel="stylesheet" href="{% static 'css/justificaciones/justificaciones.css' %}"/>
+    {{ form.media }}
+{% endblock %}

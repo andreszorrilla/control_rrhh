@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load sortable %}
+{% block menu %}
+    {% include 'menu/menu_vacaciones.html' with solicitud='active' %}
+{% endblock %}
+{% block content %}
+    
+
+    <div class="row">
+        <div class="col-lg-7">
+            <h1 class="page-header">
+                Solicitudes de Vacaciones
+                <a href="{% url "solicitud_create" %}" class="btn btn-primary" style="float: right">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Nuevo
+                </a>
+            </h1>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="btn-group">
+                        <a href="{% url "solicitud_list"%}?estado=procesado" type="button"
+                           class="btn {% if request.GET.estado == 'procesado' %} btn-primary {% else %} btn-default {% endif %}">Procesadas</a>
+                        <a href="{% url "solicitud_list"%}?estado=anulado" type="button"
+                           class="btn {% if request.GET.estado == 'anulado' %} btn-primary {% else %} btn-default {% endif %}">Anuladas</a>
+                        <a href="{% url "solicitud_list"%}?estado=" type="button"
+                           class="btn {% if request.GET.estado != 'procesado' and request.GET.estado != 'anulado' %} btn-primary {% else %} btn-default {% endif %}">Todas</a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    
+                </div>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <input type="text" id="input-filtro" class="form-control" value="{{ request.GET.filtro }}" autofocus="true">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    {% sortable_header id "Numero" %}
+                    {% sortable_header funcionario__documento "Nro. Documento" %}
+                    {% sortable_header funcionario %}
+                    {% sortable_header fecha "Fecha de Emisión" %}
+                    {% sortable_header cantidad_dias "Cantidad Días" %}
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for solicitud in solicitudes %}
+                    <tr {% if solicitud.anulado == 1 %} class="tr-anulado" {% endif %}>
+                        <td>{{ solicitud.id }}</td>
+                        <td>{{ solicitud.funcionario.documento }}</td>
+                        <td>{{ solicitud.funcionario }} </td>
+                        <td>{{ solicitud.fecha }}</td>
+                        <td>{{ solicitud.cantidad_dias }}</td>
+                        <td>
+                            <a href="{% url "solicitud_detail" solicitud.id %}" class="btn btn-primary btn-xs"
+                               data-toggle="tooltip" title="Ver Detalles"><span
+                                    class="glyphicon glyphicon-eye-open"></span></a>
+                            
+                            
+                            {% if solicitud.estado != 'anulado' %}
+                                <span class="btn btn-danger btn-xs a-anular" title="Anular" data-toggle="tooltip"
+                                      data-id="{{ solicitud.id }}"><span
+                                        class="glyphicon glyphicon-ban-circle"></span></span>
+                            {% else %}
+                                <span class="label label-danger btn-xs" data-toggle="tooltip" data-placement="right"
+                                      title=""><span
+                                        class="glyphicon glyphicon-ban-circle"></span> Anulada</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+            {% include "paginador.html" with page_range=page_range pagination_list=solicitudes %}
+
+        </div>
+    </div>
+
+
+    <!-- Small modal -->
+
+
+    <div class="modal fade modal-anular" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <form id="form-anular-confirm" action="" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myLargeModalLabel">Anular Solicitud</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" value="" id="id-anular"/>
+
+                        {% csrf_token %}
+                        ¿Anular esta Solicitud?
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ STATIC_URL }}js/vacaciones/solicitud_list.js"></script>
+
+    <script type="text/javascript">
+        $(function(){
+            
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,160 @@
+
+{% extends 'base.html' %}
+{% load sortable %}
+{% load static %}
+{% block menu %}
+    {% include 'menu/menu_justificaciones.html' with justificacion='active' %}
+{% endblock %}
+
+{% block content %}
+    <h1 class="page-header">
+        Justificaciones de Marcación
+    </h1>
+
+
+    <form id="form-marcacion-filter" action="{% url "marcaciones_list" %}" method="get" class="form-horizontal noprint" >
+        <div class="panel panel-default" id="filter">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <input type="text" id="input-filtro" class="form-control" value="{{ request.GET.filtro }}" autofocus="true">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-lg-offset-4">            
+                        <a href="{% url 'justificacion_new' %}" class="btn btn-primary">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            Agregar Justificación 
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <div class="btn-group">
+                            <a href="{% url "justificaciones_list"%}?estado=activo" type="button"
+                               class="btn {% if request.GET.estado == 'activo' %} btn-primary {% else %} btn-default {% endif %}">Activos</a>
+                            <a href="{% url "justificaciones_list"%}?estado=inactivo" type="button"
+                               class="btn {% if request.GET.estado == 'inactivo' %} btn-primary {% else %} btn-default {% endif %}">Inactivos</a>
+                            <a href="{% url "justificaciones_list"%}?" type="button"
+                               class="btn {% if request.GET.estado != 'activo' and request.GET.estado != 'inactivo' %} btn-primary {% else %} btn-default {% endif %}">Todos</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-sm-offset-7">                       
+                        <a class="btn btn-link" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            Búsqueda Avanzada 
+                            <i class="glyphicon glyphicon-collapse-down"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="collapse" id="collapseExample">
+                  <div class="well">
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="Número de documento" name="documento" value="{{ request.GET.documento }}">
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group input-daterange">
+                                <input type="text" class="form-control" autocomplete="off" placeholder="Desde" name="desde" value="{{ request.GET.desde }}">
+                                <div class="input-group-addon">a</div>
+                                <input type="text" class="form-control" autocomplete="off" placeholder="Hasta" name="hasta" value="{{ request.GET.hasta }}">
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="float: right">
+                            <button type="button" class="btn btn-default">Cancelar</button>
+                            <button type="button" class="btn btn-primary">Enviar</button>
+                            <button type="button" class="btn btn-default btn-print" >
+                                Imprimir <i class="glyphicon glyphicon-print"></i>
+                            </button>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {% if messages %}
+                {% for message in messages %}
+                <p class="alert alert-dismissable {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ message }}
+                    Hola
+                </p>
+                {% endfor %}
+            {% endif %}
+
+            <table class="table table-hover" id="table-justificacion">
+                <thead>
+                <tr>
+                    {% sortable_header id "Numero" %}
+                    {% sortable_header funcionario__documento "Nro. Documento" %}
+                    {% sortable_header funcionario %}
+                    {% sortable_header fecha_hora "Fecha y Hora" %}
+                    {% sortable_header tipo_justificacion "Tipo de Justificación" %}
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for justificacion in justificaciones %}
+                    <tr {% if justificacion.estado == 'inactivo' %} class="tr-anulado active" {% endif %}>
+                        <td>{{ justificacion.get_numero }}</td>
+                        <td>{{ justificacion.funcionario.documento }}</td>
+                        <td>{{ justificacion.funcionario }}</td>
+                        <td>{{ justificacion.fecha_hora|date:"d/m/Y H:i" }}</td>
+                        <td>{{ justificacion.get_tipo_justificacion_display }}</td>
+                        <td>
+                            <a href="{% url "justificacion_detail" justificacion.id %}" class="btn btn-primary btn-xs" data-toggle="tooltip" title="Ver Detalles">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </a>                            
+                            {% if justificacion.estado != 'inactivo' %}
+                                <a href="#" class="btn btn-danger btn-xs a-anular" data-toggle="tooltip" id="{{ justificacion.id }}" link="{% url 'justificacion_delete' justificacion.id %}" title="Eliminar">
+                                    <span class="glyphicon glyphicon-ban-circle"></span>
+                                </a>
+                            {% else %}
+                                <span class="label label-danger btn-xs" data-toggle="tooltip" data-placement="right" title="">
+                                    <span class="glyphicon glyphicon-ban-circle"></span> 
+                                    Inactivo
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            {% include "paginador.html" with page_range=page_range pagination_list=justificaciones %}
+        </div>
+    </div>
+
+    <!-- Small modal -->
+    <div class="modal fade modal-anular" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <form id="form-anular-confirm" action="" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myLargeModalLabel">Anular Justificación</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" value="" id="id-anular"/>
+
+                        {% csrf_token %}
+                        ¿Anular esta Justificación?
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ STATIC_URL }}js/justificaciones/justificacion_list.js"></script>
+    <link rel="stylesheet" href="{% static 'css/print.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/justificaciones/justificaciones.css' %}"/>
+{% endblock %}

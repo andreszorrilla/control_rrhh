@@ -1,0 +1,94 @@
+
+{% extends 'base.html' %}
+{% load sortable %}
+{% block menu %}
+    {% include 'menu/menu_licencias.html' with licencia='active' %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-6">
+            <h1 class="page-header">
+                Permisos y Licencias
+                <a href="{% url "licencia_form" %}" class="btn btn-primary" style="float: right">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Nuevo
+                </a>
+            </h1>
+        </div>
+    </div>
+    
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+           <div class="row">
+                <div class="col-lg-8">
+                    <div class="btn-group">
+                        <a href="{% url "licencia_list"%}?estado=activo" type="button"
+                           class="btn {% if request.GET.estado == 'activo' %} btn-primary {% else %} btn-default {% endif %}">Procesadas</a>
+                        <a href="{% url "licencia_list"%}?estado=inactivo" type="button"
+                           class="btn {% if request.GET.estado == 'inactivo' %} btn-primary {% else %} btn-default {% endif %}">Anuladas</a>
+                        <a href="{% url "licencia_list"%}?estado=" type="button"
+                           class="btn {% if request.GET.estado != 'activo' and request.GET.estado != 'inactivo' %} btn-primary {% else %} btn-default {% endif %}">Todas</a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <input type="text" id="input-filtro" class="form-control" value="{{ request.GET.filtro }}">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    {% sortable_header id "Numero" %}
+                    {% sortable_header funcionario %}
+                    {% sortable_header fecha_inicio "Fecha de inicio" %}
+                    {% sortable_header fecha_fin "Fecha final" %}
+                    {% sortable_header motivo %}
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for licencia in licencias %}
+                    <tr>
+                        <td>{{ licencia.id }}</td>
+                        <td>{{ licencia.funcionario }}</td>
+                        <td>{{ licencia.fecha_inicio }}</td>
+                        <td>{{ licencia.fecha_fin }}</td>
+                        <td>{{ licencia.motivo.descripcion }}</td>
+                        <td>
+                            <form action="{% url "licencia_delete" licencia.id %}" method="delete" onsubmit="return confirm('¿Esta seguro de eliminar?');">
+                                <a href="{% url 'licencia_detail' licencia.id %}" class="btn btn-primary btn-xs"
+                                   data-toggle="tooltip" title="Ver Detalles"><span
+                                        class="glyphicon glyphicon-eye-open"></span></a>
+                            
+                                 {% if licencia.estado != 'inactivo' %}
+                                    <button type="submit" value="Submit" class="btn btn-danger btn-xs">
+                                        <span class="glyphicon glyphicon-ban-circle"></span>
+                                    </button>
+                                 {% else %}
+                                    <span class="label label-danger btn-xs" data-toggle="tooltip" data-placement="right"
+                                      title=""><span
+                                        class="glyphicon glyphicon-ban-circle"></span> Anulada</span>
+                                  {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            {% include "paginador.html" with page_range=page_range pagination_list=licencias %}
+
+        </div>
+    </div>
+
+
+    <script src="{{ STATIC_URL }}js/licencias/licencia_list.js"></script>
+
+{% endblock %}

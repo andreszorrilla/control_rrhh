@@ -1,0 +1,165 @@
+<ul id="menu">
+    <li>
+        <a href="#" id="menu-vacaciones" class="{{ vacaciones }}">
+            <span class="glyphicon glyphicon-plane"></span>
+            <span class="sidebar-nav-item">Vacaciones</span>
+        </a>
+        <ul class="{{ ul_vacaciones }}">
+            <li>
+                <a href="{% url "solicitud_list"%}?estado=procesado" class="{{ solicitud }}">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Solicitudes
+                </a>
+            </li>
+            <li>
+                <a href="{% url "ajustes_vacaciones_list" %}?estado=activo" class="{{ ajustes }}">
+                    <span class="glyphicon glyphicon-edit"></span>
+                    Ajustes
+                </a>
+            </li>
+            <!--
+            <li>
+                <a href="#" class="{{ consultas }}">
+                    <span class="glyphicon glyphicon-search"></span>
+                    Consultas
+                </a>
+            </li>
+            -->
+        </ul>
+    </li>
+
+    <li>
+        <a href="#" id="menu-licencias" class="{{ licencias }}">
+            <span class="glyphicon glyphicon-calendar"></span>
+            <span class="sidebar-nav-item">Permisos</span>
+        </a>
+        <ul class="{{ ul_licencias }}">
+            <li>
+                <a href="{% url "licencia_list"%}?estado=activo" class="{{ licencia }}">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Solicitudes
+                </a>
+            </li>
+            <li>
+                <a href="{% url "motivo_list"%}" class="{{ motivo }}">
+                    <span class="glyphicon glyphicon-book"></span>
+                    Motivos de Permisos
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    {% if perms.justificaciones.change_justificacion %}
+    <li>
+        <a href="#" id="menu-justificaciones" class="{{ justificaciones }}">
+            <span class="glyphicon glyphicon-time"></span>
+            <span class="sidebar-nav-item">Justificaciones de Marcación</span>
+        </a>
+        <ul class="{{ ul_justificaciones }}">
+            <li>
+                <a href="{% url "justificaciones_list" %}?estado=activo" class="{{ justificacion }}">
+                    <span class="glyphicon glyphicon-list"></span>
+                    Justificaciones
+                </a>
+            </li>
+            <li>
+                <a href="{% url "motivos_justificaciones_list" %}" class="{{ motivo_justificacion }}">
+                    <span class="glyphicon glyphicon-list"></span>
+                    Motivos de Justificación
+                </a>
+            </li>
+        </ul>
+    </li>
+    {% endif %}
+
+    {% if perms.biometrico.change_marcacion %}
+    <li>
+        <a href="#" id="menu-biometrico" class="{{ biometrico }}">
+            <span class="glyphicon glyphicon glyphicon-file"></span>
+            <span class="sidebar-nav-item">Reporte de Asistencias</span>
+        </a>
+        <ul class="{{ ul_biometrico }}">
+            <li>
+                <a href="{% url "marcaciones_list" %}" class="{{ marcaciones }}">
+                    <span class="glyphicon glyphicon-check"></span>
+                    Marcaciones
+                </a>
+            </li>
+            {% if request.user.is_superuser %}
+            <li>
+                <a href="{% url "carga_marcaciones" %}" class="{{ carga_marcaciones }}">
+                    <span class="glyphicon glyphicon-floppy-save"></span>
+                    Carga de Marcaciones
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </li>
+    {% endif %}
+    
+    <li>
+        <a href="#" id="menu-configuraciones" class="{{ configuraciones }}">
+            <span class="glyphicon glyphicon-cog"></span>
+            <span class="sidebar-nav-item">Configuraciones</span>
+        </a>
+        <ul class="{{ ul_configuraciones }}">
+            {% if perms.antiguedad.can_change %}
+            <li>
+                <a href="{% url "antiguedad_list" %}" class="{{ antiguedad }}">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    Antiguedad
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="{% url "funcionario_list"%}?estado=activo" class="{{ funcionario }}">
+                    <span class="glyphicon glyphicon-user"></span>
+                    Funcionarios
+                </a>
+            </li>
+                <a href="{% url "seccion_list" %}" class="{{ seccion }}">
+                    <span class="glyphicon glyphicon-home"></span>
+                    Secciones
+                </a>
+            </li>
+                <a href="{% url "cargo_list" %}" class="{{ cargo }}">
+                    <span class="glyphicon glyphicon-wrench"></span>
+                    Cargos
+                </a>
+            </li>
+            {% if perms.parametro.can_change %}
+            <li>
+                <a href="{% url "parametro_detail" "1" %}" class="{{ parametro }}">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                    Parametros
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.feriado.can_change %}
+            <li>
+                <a href="{% url "feriado_list" %}" class="{{ feriado }}">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    Feriados
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </li>
+    <!--
+    <li>
+        <a href="#" id="menu-reportes" class="{{ reportes }}">
+            <span class="glyphicon glyphicon-cog"></span>
+            <span class="sidebar-nav-item">Reportes</span>
+        </a>
+
+        <ul class="{{ ul_reportes }}">
+            <li>
+                <a href="{% url "reportes_main" %}" class="{{ reportes }}">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    Funcionario
+                </a>
+            </li>
+        </ul>
+    </li>
+    -->
+</ul>

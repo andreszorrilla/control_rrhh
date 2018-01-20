@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block menu %}
+    {% include 'menu/menu_parametros.html' with feriado='active' %}
+{% endblock %}
+
+
+{% block content %}
+	<link rel="stylesheet" href="{% static 'css/print.css' %}"/>
+
+    {% include 'pdf/pdf_header.html' %}
+
+    <br></br>
+
+   <h1 class="page-header">
+        Feriado
+        <hr/>
+    </h1>
+
+    <table class="table">
+        <tr>
+            <th>Numero:</th>
+            <td> {{ feriados.id }}</td>
+        </tr>
+        <tr>
+            <th>Fecha:</th>
+            <td> {{ feriados.fecha }}</td>
+        </tr>
+
+        <tr>
+            <th>Motivo:</th>
+            <td> {{ feriados.motivo }}</td>
+        </tr>
+    </table>
+
+    {% include 'pdf/pdf_footer.html' %}
+
+        <div class="panel-footer noprint" id="div-footer">
+            <button class="btn btn-default btn-back">Volver</button>
+            <input type='button' value='Imprimir' class="btn btn-info" id="btn-print" />
+        </div>
+
+	<script type="text/javascript">
+	    $('#btn-print').click(function(){
+	        window.print();
+	        
+	    });
+	</script>
+
+
+{% endblock %}
+

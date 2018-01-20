@@ -1,0 +1,62 @@
+{% for marcaciones_list, funcionario in marcaciones_funcionarios_list %}
+    <div class="marcaciones-list">
+        {% include 'pdf/pdf_header.html' %}
+        <h5 class="text-center text-uppercase title-reporte noprint">REPORTE DE ASISTENCIA</h5>
+        <table class="table-datos-marcacion table">
+            <tr>
+                <th>Funcionario:</th>
+                <td> {{ funcionario.get_nombre_completo }}</td>
+                <th>Emisión:</th>
+                <td> {{ hora_emision }}</td>
+            </tr>
+            <tr>
+                <th>Documento:</th>
+                <td> {{ funcionario.documento }}</td>
+            </tr>                
+            <tr>
+                <th>Cargo:</th>
+                <td> {{ funcionario.cargo }} </td>
+                <th>Desde:</th>
+                <td>{{ request.GET.desde }}</td>
+            </tr>
+            <tr>
+                <th>Sección:</th>
+                <td> {{ funcionario.seccion }}</td>
+                <th>Hasta:</th>
+                <td>{{ request.GET.hasta }}</td>
+            </tr>
+        </table>
+        <hr>
+        <table class="table table-bordered table-marcacion">
+            <thead>
+                <tr>
+                    <th width="20%">Fecha</th>
+                    <th width="35%">Marcaciones</th>
+                    <th width="20%">Vacaciones / Permisos</th>
+                    <th width="25%">Just. de Marcación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fecha, horas_marcaciones, fecha_vacacion, fechas_justificaciones in marcaciones_list %}
+                <tr>
+                    <td>{{ fecha }}</td>
+                    <td>
+                        {% for marcacion in horas_marcaciones %}
+                            {{ marcacion.get_hora }}
+                            {% if marcacion != horas_marcaciones.last %}
+                            -
+                            {% endif %}
+                        {% endfor%}
+                    </td>
+                    <td>{{ fecha_vacacion }}</td>
+                    <td>
+                        {% for hora_justificacion, descripcion in fechas_justificaciones %}
+                            <p style="padding: 0px; margin: 0;">{{ hora_justificacion|date:"H:i" }} - {{ descripcion }}</p>
+                        {% endfor%}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endfor %}

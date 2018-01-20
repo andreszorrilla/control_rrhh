@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load sortable %}
+{% block menu %}
+    {% include 'menu/menu_configuraciones.html' with seccion='active' %}
+{% endblock %}
+
+
+{% block content %}
+    <h1 class="page-header">
+        Nueva Seccion
+        <hr/>
+    </h1>
+    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {% csrf_token %}
+                {% crispy form %}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <span class="btn btn-default btn-back">Volver</span>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+

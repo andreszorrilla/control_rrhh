@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block menu %}
+    {% include 'menu/menu_parametros.html' with antiguedad='active' %}
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        Detalle de Configuración de Antigüedad
+    </h1>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><b>Años de Antiguedad: </b>{{ antiguedad.anhos_antiguedad }}</p>
+
+            <p><b>Días libres: </b>{{ antiguedad.dias_libres }}</p>
+        </div>
+        <div class="panel-footer">
+            <a href="{% url "antiguedad_update" antiguedad.id %}" class="btn btn-primary">Editar</a>
+            <a href="{% url "antiguedad_list" %}" class="btn btn-default">Volver</a>
+        </div>
+    </div>
+{% endblock %}
+
+

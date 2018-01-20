@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load sortable %}
+{%  % }
+{% block menu %}
+    {% include 'menu/menu_licencias.html' with motivo='active' %}
+{% endblock %}
+
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-lg-6">
+            <h1 class="page-header">
+                Motivos de Permisos
+                <a href="{% url "motivo_form" %}" class="btn btn-primary" style="float: right">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Nuevo
+                </a>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">                
+                <div class="col-lg-offset-8 col-lg-4">
+                    <div class="input-group">
+                    	<input type="text" id="input-filtro" class="form-control" value="">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    {% sortable_header id "Número" %}
+                    {% sortable_header descripcion "Descripción" %}
+                    {% sortable_header duracion "Cantidad de Dias" %}
+                    {% sortable_header tipo_motivo "Tipo" %}
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for motivo in motivos %}
+                    <tr>
+                        <td>{{ motivo.id }}</td>
+                        <td>{{ motivo.descripcion }}</td>
+                        {% if motivo.duracion != 0 %}
+                            <td>{{ motivo.duracion }}</td>
+                            <td>{{ motivo.tipo_motivo }}</td>
+                        {% else %}
+                            <td>-</td>
+                            <td>Permiso</td>
+                        {% endif %}
+                        <td>
+
+                            <form action="{% url "motivo_delete" motivo.id %}" method="delete" onsubmit="return confirm('¿Esta seguro de eliminar este motivo?');">
+                                <a href="" class="btn btn-primary btn-xs"
+                                   data-toggle="tooltip" title="Ver Detalles"><span
+                                        class="glyphicon glyphicon-eye-open"></span></a>                                
+                                <a href="{% url "motivo_edit" motivo.id %}"
+                                       class="btn btn-info btn-xs" title="Editar" data-toggle="tooltip"
+                                       data-id="{{ motivo.id }}">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </a>
+                               {% if perms.motivo.can_change %}
+                               <button type="submit" value="Submit" class="btn btn-danger btn-xs">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                               </button>
+                               {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            {% include "paginador.html" with page_range=page_range pagination_list=motivos %}
+
+        </div>
+    </div>
+
+
+    <script src="{{ STATIC_URL }}js/configuraciones/motivo_list.js"></script>
+
+{% endblock %}

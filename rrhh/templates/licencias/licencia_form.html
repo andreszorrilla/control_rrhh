@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block menu %}
+    {% include 'menu/menu_licencias.html' with licencia='active' %}
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        Nueva solicitud de Licencia o Permiso
+        <hr/>
+    </h1>
+    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {% crispy form %}
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="{% url "licencia_list"%}" class="btn btn-default">Volver</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script src="{{ STATIC_URL }}js/licencias/licencias_form.js"></script>
+
+
+    <script type="text/javascript">
+        var hola;
+        $('#id-Crispy-MotivoForm').submit(function() {        
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(json) {
+                    $("#id_motivo").empty().append(new Option("---------", ""));
+                    for (var i = 0; i < json.length; i++) {
+                        $("#id_motivo").append(new Option(json[i]["fields"].descripcion, json[i].pk));
+                    };
+                }
+            })
+            return false;
+        });
+
+        $('#btn-save-motivo-form').click(function(){            
+            $('#id-Crispy-MotivoForm').submit();
+        });
+
+    </script>
+
+
+    <style type="text/css">
+        /*#div_id_fecha_inicio, #div_id_fecha_fin, #div_id_fechas{
+            display: none;
+        }*/
+    </style>
+
+    
+{% endblock %}

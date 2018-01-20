@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block menu %}
+    {% include 'menu/menu_configuraciones.html' with seccion='active'%}
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        Detalle Seccion
+        <hr/>
+    </h1>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><b>Nombre: </b>{{ seccion.nombre }}</p>
+        </div>
+        <div class="panel-footer">
+            <a href="" class="btn btn-primary">Editar</a>
+{#            <a href="{% url "funcionario_list"%}?estado=activos" class="btn btn-default">Volver</a>#}
+            <span class="btn btn-default btn-back">Volver</span>
+        </div>
+    </div>
+{% endblock %}
+
+

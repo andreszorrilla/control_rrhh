@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load sortable %}
+{% block menu %}
+    {% include 'menu/menu_biometrico.html' with carga_marcaciones='active' %}
+{% endblock %}
+{% block content %}
+
+    <link rel="stylesheet" href="{% static 'css/print.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/biometrico/marcaciones.css' %}"/>
+
+    <h1 class="page-header">
+        Marcaciones
+    </h1>
+
+<form enctype="multipart/form-data" action="." method="post" class="form-horizontal" id="form-carga-marcaciones">
+    <div class="panel panel-default" id="filter">
+        <div class="panel-heading">
+            <h4>Carga de Marcaciones</h4>
+        </div>
+        <div class="panel-body">
+            {% csrf_token %}
+            {% crispy transaccionForm %}
+            {% crispy uploadFileForm %}
+        </div>
+        <div class="panel-footer" style="">
+            <button type="submit" class="btn-primary btn" id="btn-submit">Enviar</button>
+            <a class="btn-default btn" href="{% url "marcaciones_list" %}">Limpiar</a>
+        </div>
+    </div>
+</form>
+
+<script>
+  $(document).on('ready', function() {
+      $("#id_file").fileinput({
+          initialPreviewAsData: true,
+          deleteUrl: "/site/file-delete",
+          overwriteInitial: false,
+          initialCaption: "--- Seleccione el archivo csv ---",
+          allowedFileExtensions: ["csv", "dat", "txt"],
+          language: "ru",
+          uploadUrl: "{% url 'carga_marcaciones' %}",
+          uploadAsync: true,
+          showUpload: false,
+          showRemove: false,
+          fileActionSettings : {
+            showUpload : false,
+          },
+          slugCallback : function(filename) {
+            return filename.replace('(', '').replace(']', '');
+          }
+      });
+  });
+</script>
+{% endblock %}
+
+
+
+{% block javascript %}
+  {{ block.super }}
+  <link href="{% static 'bootstrap-fileinput/css/fileinput.css' %}" media="all" rel="stylesheet" type="text/css"/>
+  <link href="{% static 'bootstrap-fileinput/themes/explorer/theme.css' %}" media="all" rel="stylesheet" type="text/css"/>
+  <script src="{% static 'bootstrap-fileinput/js/plugins/sortable.js' %}" type="text/javascript"></script>
+  <script src="{% static 'bootstrap-fileinput/js/fileinput.js' %}" type="text/javascript"></script>
+  <script src="{% static 'bootstrap-fileinput/js/locales/fr.js' %}" type="text/javascript"></script>
+  <script src="{% static 'bootstrap-fileinput/js/locales/es.js' %}" type="text/javascript"></script>
+  <script src="{% static 'bootstrap-fileinput/themes/explorer/theme.js' %}" type="text/javascript"></script>
+{% endblock %}

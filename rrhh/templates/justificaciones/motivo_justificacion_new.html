@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block menu %}
+    {% include 'menu/menu_justificaciones.html' with motivo_justificacion='active' %}
+{% endblock %}
+
+{% block content %}
+    {% include "justificaciones/_motivo_justificacion_form.html" with title="Nueva Justificación" %}
+{% endblock %}

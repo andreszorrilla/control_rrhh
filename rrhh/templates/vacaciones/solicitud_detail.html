@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block menu %}
+    {% include 'menu/menu_vacaciones.html' with solicitud='active'%}
+{% endblock %}
+{% block content %}
+
+    <link rel="stylesheet" href="{% static 'css/print.css' %}"/>
+    {% include 'pdf/pdf_header.html' %}
+    
+
+    <h3 class="page-header">
+        <span class="web-title">Solicitud y Autorización de Vacaciones</span>
+        <span class="report-title"></span>
+        <hr>        
+    </h3>
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <table class="table">
+                <tr>
+                    <th width="30%">Número:</th>
+                    <td width="70%">{{ solicitud.id }}</td>
+                </tr>
+                <tr>                    
+                    <th width="30%">Fecha de emisión:</th>
+                    <td width="70%">{{ solicitud.fecha}}</td>
+                </tr>
+                <tr>
+                    <th width="30%">Solicitante:</th>
+                    <td width="70%">{{ solicitud.funcionario.get_nombre_completo}}</td>
+                </tr>
+                <tr>
+                    <th width="30%">Número de documento:</th>
+                    <td width="70%">{{ solicitud.funcionario.documento }}</td>                    
+                </tr>
+                <tr>
+                    <th width="30%">Cargo:</th>
+                    <td width="70%">{{ solicitud.funcionario.cargo.nombre }}</td>
+                </tr>
+                <tr>                    
+                    <th width="30%">Sección:</th>
+                    <td width="70%">{{ solicitud.funcionario.seccion.nombre }}</td>                    
+                </tr>
+                <tr>
+                    <th width="30%">Cantidad de días:</th>
+                    <td width="70%">{{ solicitud.cantidad_dias }}</td>
+                </tr>
+                <tr>
+                    <th width="30%">Fechas:</th>
+                    <td width="70%">{{ fechas }}</td>
+                </tr>
+                <tr>
+                    <th width="30%">Días restantes:</th>
+                    <td width="70%">{{ libres }}</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div id="div-footer-normal">
+            {% include 'pdf/pdf_footer.html' %}            
+        </div>
+        <div id="div-footer-jefes">
+            {% include 'pdf/pdf_footer_jefes.html' %}
+        </div>
+        <div id="div-footer-facultades">
+            {% include 'pdf/pdf_footer_facultades.html' %}
+        </div>
+
+        <div class="panel-footer noprint " id="div-footer">
+            <button class="btn  btn-default btn-back">Volver</button>
+            <div class="btn-group">
+                <button type="button" class="btn btn-info btn-print">Imprimir</button>
+                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" class="btn-print">Vista Normal</a></li>
+                    <li><a href="#" class="btn-print-facultades">Vista para Facultades</a></li>
+                    <li><a href="#" class="btn-print-jefes">Vista para Directores</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $('.btn-print').click(function(){
+        var text = "Solicitud y Autorización de Vacaciones SPVL/RRHH/01";
+        $(".report-title").html( text.toUpperCase() );
+
+        $("#div-footer-normal").show();
+        $("#div-footer-jefes").hide();
+        $("#div-footer-facultades").hide();
+        window.print();        
+    });
+
+    $('.btn-print-jefes').click(function(){
+        var text = "<p>Solicitud y Autorización de Vacaciones SPVL/RRHH/02 -</p>\
+                    <p>Jefes y Directores afectados RES. REC. Nº 18/2012</p>";
+        $(".report-title").html( text.toUpperCase() );
+
+        $("#div-footer-jefes").show();
+        $("#div-footer-normal").hide();
+        $("#div-footer-facultades").hide();
+        window.print();
+    });
+
+    $('.btn-print-facultades').click(function(){
+        var text = "Solicitud y Autorización de Vacaciones SPVL/RRHH/01";
+        $(".report-title").html( text.toUpperCase() );
+
+        $("#div-footer-facultades").show();
+        $("#div-footer-jefes").hide();
+        $("#div-footer-normal").hide();
+        window.print();
+    });
+</script>
+
+
+
+{% endblock %}
+

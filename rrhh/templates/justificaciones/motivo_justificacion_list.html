@@ -1,0 +1,141 @@
+
+{% extends 'base.html' %}
+{% load sortable %}
+{% block menu %}
+    {% include 'menu/menu_justificaciones.html' with motivo_justificacion='active' %}
+{% endblock %}
+
+{% block content %}
+    <h1 class="page-header">
+        Motivos de Justicaciones
+    </h1>
+
+
+    <form id="form-marcacion-filter" action="{% url "marcaciones_list" %}" method="get" class="form-horizontal" >
+        <div class="panel panel-default" id="filter">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <input type="text" id="input-filtro" class="form-control" value="{{ request.GET.filtro }}" autofocus="true">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-lg-offset-4">            
+                        <a href="{% url 'motivo_justificacion_new' %}" class="btn btn-primary">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            Agregar Motivo 
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="mensajes"></div>
+            {% if messages %}
+                {% for message in messages %}
+                <p class="alert alert-dismissable {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ message }}
+                </p>
+                {% endfor %}
+            {% endif %}
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    {% sortable_header id "Numero" %}
+                    {% sortable_header descripcion %}
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for motivo_justificacion in motivos_justificaciones %}
+                    <tr>
+                        <td>{{ motivo_justificacion.id }}</td>
+                        <td>{{ motivo_justificacion.descripcion }}</td>
+                        <td>
+                            <a href="{% url "motivo_justificacion_detail" motivo_justificacion.id %}" class="btn btn-primary btn-xs" data-toggle="tooltip" title="Ver Detalles">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </a>
+                            <a href="{% url "motivo_justificacion_edit" motivo_justificacion.id %}" class="btn btn-info btn-xs" data-toggle="tooltip" title="Modificar">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </a>
+                            <a href="#" class="btn btn-danger btn-xs a-anular" data-toggle="tooltip" id="{{ motivo_justificacion.id }}" title="Eliminar">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+            {% include "paginador.html" with page_range=page_range pagination_list=solicitudes %}
+
+        </div>
+    </div>
+
+
+
+    <!-- Small modal -->
+
+
+    <div class="modal fade modal-anular" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <form id="form-anular-confirm" action="" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myLargeModalLabel">Anular Motivo de Justificación</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" value="" id="id-anular"/>
+
+                        {% csrf_token %}
+                        ¿Desea eliminar este Motivo de Justificación?
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">        
+        $('.a-anular').click(function () {
+            var id = $(this).attr("id");
+            $('.modal-anular').modal('show');
+            $('#id-anular').val(id);
+
+        });
+
+        $('#form-anular-confirm').submit(function () {
+            var data = $('#form-anular-confirm').serialize();
+            var id = $('#id-anular').val();
+            var url = "{% url 'motivo_justificacion_delete' 123 %}";
+
+            url = url.replace('123', id);
+
+            $.ajax({
+                url: url,
+                data: data,
+                method: "post"
+            })
+            return false;
+        });
+
+
+
+    </script>
+
+    
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block menu %}
+    {% include 'menu/menu_vacaciones.html' with solicitud='active' %}
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        Editar Detalle
+        <hr/>
+    </h1>
+    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {% crispy form %}
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="{% url "ajustes_vacaciones_detail" funcionario.id %}" class="btn btn-default">Volver</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

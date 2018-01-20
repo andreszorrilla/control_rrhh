@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>RRHH</title>
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" media="all" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/metisMenu.css"/>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	{#    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">#}
+
+	<!-- Bootstrap core CSS -->
+	{#    <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">#}
+	<script src="{{ STATIC_URL }}js/jquery.min.js"></script>
+
+	<!-- Custom styles for this template -->
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/dashboard.css">
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/datepicker3.css">
+	<script src="{{ STATIC_URL }}js/scripts.js"></script>
+
+</head>
+</head>
+<body>
+
+
+<div id="wrap">
+	<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="{% url "base_url" %}">Recursos Humanos</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right"> 
+					{% if not user.is_anonymous %}
+						<li>
+							<p class="navbar-text navbar-link">Bienvenido: 
+							<strong>{{ user.username }}</strong>
+							</p>
+						</li>
+						<li><a href="{% url 'django.contrib.auth.views.logout' %}">Cerrar sesion</a></li>
+					{% endif %}
+				</ul>
+
+
+				<form class="navbar-form navbar-right">
+	{#                <input type="text" class="form-control" placeholder="Search...">#}
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			{% if not user.is_anonymous %}
+			<div class="col-sm-3 col-md-2 sidebar">
+				<nav class="sidebar-nav">
+					{% block menu %}                    
+						{% include 'menu/menu.html' %}
+					{% endblock %}
+				</nav>
+			</div>
+			{% endif %}
+			
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+				<div id="content">
+					{% block content %}
+						<h2 class="text-uppercase">Sistema de Control de Recursos Humanos</h2>
+
+
+
+
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+	<nav class="navbar navbar-default " id="footer">
+		<div class="container">
+			<div  class="container navbar-text ">
+				<p>Desarrollado por el Departamento de Tecnología e Informática</p>
+				<p>Copyright © 2015  | Universidad Nacional de Itapúa. </p>
+			</div>
+		</div>
+	</nav>
+
+
+<style type="text/css">
+	#footer p{
+		color: white;
+		line-height: 100%;
+
+	}
+</style>
+
+
+
+{% block javascript %}
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-datepicker.js"></script>
+<script src="{{ STATIC_URL }}js/configuracion.js"></script>
+<script src="{{ STATIC_URL }}js/jquery.metisMenu.js"></script>
+<script src="{{ STATIC_URL }}js/moment.min.js"></script>
+{% endblock %}
+</body>
+</html>

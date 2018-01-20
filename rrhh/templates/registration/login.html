@@ -1,0 +1,62 @@
+{% extends "base_login.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="row" >
+	
+
+<div class="col-sm-6 col-sm-offset-2">
+
+<div class="panel panel-primary" id="login"> 
+	<div class="panel-heading hide">
+		<h3 class="text-center">Recursos Humanos</h3>
+	</div>
+	<div class="panel-body">
+
+		<div class="thumbnail">
+		<img src="{% static "img/logo_uni_2.png" %}" alt="My image" class="image-logo" />
+			<div class="text-center">
+				<h4 class="text-center title">
+					SISTEMA DE CONTROL DE RECURSOS HUMANOS
+				</h4>
+			</div>
+		</div>
+
+		<hr>
+		<form role="form" class="form-horizontal" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+			{% csrf_token %}
+			{% for field in form %}
+				<div class="form-group has-feedback has-icon">
+					<div class="col-sm-12">
+						<input class="form-control" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" type="{{ field.html_name }}" autofocus="true" placeholder="{{ field.label }}" />
+						<span class="glyphicon form-control-feedback" label_id="{{ field.id_for_label }}" aria-hidden="true"></span>
+					</div>
+				</div>
+			{% endfor %}
+			<hr>			
+			{% if form.errors %}
+				<div class="alert alert-danger text-center" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+					<span class="sr-only">Error:</span>
+					El nombre de usuario o contraseña no coinciden. Intente de nuevo.
+				</div>
+			{% endif %}
+			<div class="form-group">
+				<div class="col-sm-12">
+					<button type="submit" class="btn btn-primary" id="btn-login">Iniciar sesión</button>
+					<input type="hidden" name="next" value="{{ next }}" />
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+</div>
+</div>
+
+<script src="{{ STATIC_URL }}js/registation/login.js"></script>
+<link href="{{ STATIC_URL }}css/login.css" rel="stylesheet" />
+
+{% endblock %}

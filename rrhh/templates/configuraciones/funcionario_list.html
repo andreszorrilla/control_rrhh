@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load sortable %}
+{% block menu %}
+    {% include 'menu/menu_configuraciones.html' with funcionario='active' %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-3">
+            <h1 class="page-header">
+                Funcionarios
+                <a href="{% url "funcionario_create" %}" class="btn btn-primary" style="float: right">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Nuevo
+                </a>
+            </h1>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="btn-group">
+                        <a href="{% url "funcionario_list" %}?estado=activo" type="button"
+                           class="btn {% if request.GET.estado == 'activo' %} btn-primary {% else %} btn-default {% endif %}">Activos</a>
+                        <a href="{% url "funcionario_list" %}?estado=inactivo" type="button"
+                           class="btn {% if request.GET.estado == 'inactivo' %} btn-primary {% else %} btn-default {% endif %}">Inactivos</a>
+                        <a href="{% url "funcionario_list"%}?estado=" type="button"
+                           class="btn {% if request.GET.estado != 'activo' and request.GET.estado != 'inactivo' %} btn-primary {% else %} btn-default {% endif %}">Todos</a>
+
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <input type="text" id="input-filtro" class="form-control" value="{{ request.GET.filtro }}">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    {% sortable_header id "Número" %}
+                    {% sortable_header nombre "Nombres" %}
+                    {% sortable_header apellido "Apellidos" %}
+                    {% sortable_header documento "Documento" %}
+                    {% sortable_header cargo_id "Cargo" %}
+                    {% sortable_header seccion_id "Sección" %}
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for funcionario in funcionarios %}
+                    <tr {% if funcionario.estado == 'inactivo' %} class="tr-anulado active" {% endif %}>
+                        <td>{{ funcionario.id }}</td>
+                        <td>{{ funcionario.nombre }}</td>
+                        <td>{{ funcionario.apellido }}</td>
+                        <td>{{ funcionario.documento }}</td>
+                        <td>{{ funcionario.cargo.nombre }}</td>
+                        <td>{{ funcionario.seccion.nombre }}</td>
+                        <td>
+                            <a href="{% url "funcionario_detail" funcionario.id %}" class="btn btn-primary btn-xs"
+                               data-toggle="tooltip" title="Ver Detalles"><span
+                                    class="glyphicon glyphicon-eye-open"></span></a>
+                            <a href="{% url "funcionario_update" funcionario.id %}" class="btn btn-warning btn-xs"
+                               data-toggle="tooltip" title="Editar"><span
+                                    class="glyphicon glyphicon-edit"></span></a>
+                            {% if funcionario.estado == 'activo' %}
+                                <a href="{% url "funcionario_update_estado" funcionario.id %}"
+                                   class="btn btn-danger btn-xs btn-desactivar" title="Desactivar" data-toggle="tooltip"
+                                   data-id="{{ funcionario.id }}">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                                </a>
+                            {% else %}
+                                <a href="{% url "funcionario_update_estado" funcionario.id %}"
+                                   class="btn btn-success btn-xs btn-activar" title="Activar" data-toggle="tooltip"
+                                   data-id="{{ funcionario.id }}">
+                                    <span class="glyphicon glyphicon-ok-circle"></span>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            {% include "paginador.html" with page_range=page_range pagination_list=funcionarios %}
+
+        </div>
+    </div>
+
+
+    <script src="{{ STATIC_URL }}js/configuraciones/funcionario_list.js"></script>
+
+{% endblock %}

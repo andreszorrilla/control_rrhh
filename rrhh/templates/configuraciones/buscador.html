@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1 class="page-header">
+		Sistema de Control de Vacaciones
+		<hr/>
+	</h1>
+
+	<div class="form-horizontal">
+		<div class="form-group">
+			<h5 for="input-filtro" class="col-sm-2 col-sm-offset-2 control-label">Número de Cédula</h5>
+			<div class="col-sm-3  ">
+				<div class="input-group">
+					<input type="text" id="input-filtro" class="form-control" value="{{ request.GET.filtro }}">
+					<span id="btn-filtro" class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+				</div>
+			</div>
+		</div>
+	</div >
+	
+	<hr/>
+
+	
+	<div id="result" class="panel panel-default hide">		
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-sm-6">
+					<h5 id="nombre">
+						<b>Nombres: </b>
+						<span></span>
+					</h5>
+
+					<h5 id="apellido">
+						<b>Apellidos: </b>
+						<span></span>
+					</h5>
+				</div>
+				<!--
+				<div class="col-sm-6">
+					<h5 id="dias_libres">
+						<b>Total de Dias libres: </b>
+						<span></span>
+					</h5>
+				</div>
+				-->
+			</div>
+			
+
+			<div class="col-sm-3 col-sm-offset-4">
+				<h5 id="message"  class='text-danger text-center'/>
+			</div>
+
+
+			<table id="tabla-funcionario" class="table table-striped table-bordered">
+				<thead>
+				<tr>
+					<th>Periodo</th>
+					<th>Cantidad de Días Usados</th>
+					<th>Cantidad de Días Libres</th>
+					<th>Días asignados segun periodo</th>
+					<th>Fechas usadas</th>
+				</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+<div id="modal-fechas" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h3 class="modal-title">Fechas de vacaciones</h3>
+			</div>
+			<div class="modal-body">
+				<ul>	
+				</ul>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+	<style type="text/css">
+	.navbar-brand{
+		pointer-events: none;
+		cursor: default;
+	}
+
+	.sidebar{
+		display: none;
+	}
+	</style>
+
+
+	<script type="text/javascript">
+	$("#input-filtro").keypress(function(e) {
+		if(e.which == 13) {
+			search_document();
+		}
+	});
+
+	$("#btn-filtro").click(function(){
+		search_document();            
+	});
+
+	var d;
+
+	function search_document(){
+		var val = $("#input-filtro").val();
+		if (val == ""){
+			$("#result").addClass("hide");
+			return;
+		}
+
+		
+		$.ajax({
+			url: "/vacaciones/buscador_funcionario/" + val,
+			success: function(data){
+				var periodos;
+				var button, button_tmp;
+				d = data;
+				var total_dias;
+				button = "<a class='btn btn-sm btn-success btn-show-vacaciones'><i class='glyphicon glyphicon-list-alt'></i></a>";
+				$("#result").removeClass("hide");
+				periodos = JSON.parse(data.periodos);
+
+				total_dias = 0;
+
+				if (periodos.length == 0){
+					$("#tabla-funcionario").hide();
+					$("#result #message").html("El funcionario no tiene días libres.");
+				}
+				else{
+					$("#result #message").html("");
+					$("#tabla-funcionario").show();
+					$("#tabla-funcionario tbody tr").not("#tr-dias-libres").html("");
+					for (var i = 0; i < periodos.length; i++) {
+						var total = periodos[i].fields.usados + periodos[i].fields.libres;
+						var anho = periodos[i].fields.anho;
+						
+						if (!data.fechas[anho] || JSON.parse(data.fechas[anho]).length == 0 )
+							button_tmp = "";						
+						else
+							button_tmp = button;
+
+
+						$("#tabla-funcionario tbody").append( 
+							"<tr value=" + anho + ">" +
+							"<td>" + data.fechas_periodos[anho][0] + " al " + data.fechas_periodos[anho][1] + "</td>" + 
+							"<td>" + periodos[i].fields.usados + "</td>" + 
+							"<td>" + periodos[i].fields.libres + "</td>" +
+							"<td>" + total + "</td>" +
+							"<td> "+ button_tmp +"</td>" +
+ 							"</tr>"
+						);						
+						total_dias += periodos[i].fields.libres;
+					};
+					activate_modal();
+				}
+
+
+				$("#nombre span").html(data.nombre);
+				$("#apellido span").html(data.apellido);
+
+				$("#tabla-funcionario tbody").append( 
+							"<tr>" +
+							"<th colspan='2' class='text-center'>Total días libres </th>" +
+							"<td colspan='3'> "+ total_dias +"</td>" +
+ 							"</tr>"
+						);	
+
+				$("#dias_libres span").html(total_dias);
+
+			},
+			error: function(){
+				$("#result").addClass("hide");
+
+			}
+		});
+	}
+
+
+	function activate_modal(){
+		$(".btn-show-vacaciones").click(function(){		
+			var anho = $( this ).closest("tr").attr("value");
+			if (!d.fechas[anho] || JSON.parse(d.fechas[anho]).length == 0 )
+				return;
+			else{
+				$("#modal-fechas .modal-body ul").html("");
+				var fechas = JSON.parse(d.fechas[anho]);
+				for (var i = 0; i < fechas.length; i++) {
+					$("#modal-fechas .modal-body ul").append("<li>"+ fechas[i].fields.fecha +"</li>");					
+				};
+				$("#modal-fechas").modal();
+			}				
+			
+		});
+	}
+	</script>
+{% endblock %}

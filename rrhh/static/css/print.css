@@ -1,0 +1,98 @@
+	@media print {
+		html, body, .page-header{
+			font-family: "Times New Roman", Times, serif;
+			
+		}
+
+		.noprint{
+			display: none !important;
+		}
+		.panel-default{
+			border-color: #FFFFFF;
+		}
+
+		.logo{
+			width: 15%;
+			margin-top: -10%;
+		}
+
+		.header h4{
+			margin-top: -10%;
+			margin-bottom: 0;
+			font-weight:  bold;
+		}
+
+		.header img{
+
+		}
+		
+		.firma{
+			font-size:1em;
+			background-color:#CC0000;
+			color:#FFFFFF;
+			text-align: center;
+			overflow: hidden;
+			position: fixed;
+			bottom: 0;
+			width: 165mm;
+		}
+
+		.firma table tr th, .firma table tr td{
+			text-align: center;
+		}
+
+		.firma table tr:nth-child(odd) th, .firma table tr:nth-child(odd) td{
+			padding-bottom: 0px;
+		}
+
+		.firma tr:nth-child(2){
+			line-height: 14px; 
+		}
+
+		.firma p{
+			font-family: Verdana, Arial, Helvetica, sans-serif;
+			font-size:0.7em;
+		}
+
+		.firma hr{
+			margin-top: 0;
+			margin-bottom: 0;
+			margin-bottom: 0;
+		}
+
+		.observaciones{
+			margin-top: 2%;
+		}
+
+		
+
+		.page-header{
+			font-size: 15px;
+			font-weight: bold;
+		}
+
+		.page-header hr{
+			margin-bottom: 0px;
+		}
+
+		.web-title{
+			display: none;
+		}
+	}
+
+	@media screen{
+		.header{
+			display: none !important;
+		}
+
+		.firma{
+			display: none !important;
+		}
+
+		.page-header hr{
+		}
+
+		.report-title{
+			display: none;
+		}
+	}

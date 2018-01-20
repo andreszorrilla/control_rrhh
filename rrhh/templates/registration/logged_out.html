@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<h2>Recursos Humanos</h2>
+
+<h4>Has cerrado sesión!</h4>
+
+<a href="{% url 'django.contrib.auth.views.login' %}?next=/rrhh/">Iniciar sesión</a>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+#div_id_motivo_justificacion{
+    display: none;
+}
+
+
+@media print {
+    a[href]::after {
+        content: " "
+    }
+
+    #table-justificacion tr td:last-child, #table-justificacion tr th:last-child {
+        display: none;
+    }
+
+}
